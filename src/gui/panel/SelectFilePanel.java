@@ -7,43 +7,100 @@ import javax.swing.AbstractAction;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
+import javax.swing.JOptionPane;
 import javax.swing.SpringLayout;
 
+import util.MimeTypeChecker;
 
 /**
- * UI class for selecting a target file
+ * SelectFilePanel
+ * 
+ * UI class for selecting a text file.
  * @author Patrick
  */
-public class SelectFilePanel extends JPanel{
+public class SelectFilePanel extends AbstractUIPanel{
 
-	private static final int LAYOUT_GAP = 20; //px
+	/*
+	 * INTERFACES
+	 */
 	
 	/**
-	 * default serial version ID as required for extending JPanel
+	 * ISelectedFilePanelEventListener
+	 * 
+	 * Interface for callback events.
+	 * @author Patrick
 	 */
+	public interface ISelectFilePanelEventListener {
+		
+		/**
+		 * onFileSelected
+		 * 
+		 * Event callback method, invoked when a file was successfully selected.
+		 */
+		public void onFileSelected();
+	}
+	
+	
+	/*
+	 * CONSTANTS
+	 */
+	
+	//default serial version ID as required for extending JPanel
 	private static final long serialVersionUID = 1L;
 
-	protected File file;
 	
-	/**
-	 * Interactive UI components
+	/*
+	 * MEMBER VARIABLES
 	 */
+
+	//registered event listener for the panel
+	ISelectFilePanelEventListener eventListener;
+	
+	//selected file, 
+	protected File file = null;
+	
+	//UI elements
 	JButton buttonSelectFile;
 	JLabel labelFilename;
 	JLabel labelFilepath;
 	JLabel labelFilesize;
+
+	
+	/*
+	 * INTERFACE METHODS
+	 */
 	
 	/**
 	 * Default constructor
 	 * 
-	 * set-up UI elements
+	 * Set event listener and set-up UI elements.
 	 */
-	public SelectFilePanel() {
+	public SelectFilePanel(ISelectFilePanelEventListener eventListener) {
 		super();
+		this.eventListener = eventListener;
 		prepareLayout();
 	}
 	
+	/**
+	 * getFile
+	 * 
+	 * Getter for the selected file.
+	 * @return File selected file 
+	 */
+	public File getFile() {
+		return this.file;
+	}
+	
+
+	/*
+	 * PRIVATE METHODS
+	 */
+	
+	/**
+	 * prepareLayout
+	 * 
+	 * Creates UI elements and adds them to spring layout.
+	 */
 	private void prepareLayout() {
 		SpringLayout layout = new SpringLayout();
         setLayout(layout);
@@ -53,12 +110,13 @@ public class SelectFilePanel extends JPanel{
         buttonSelectFile.setAction(selectFileAction);
         buttonSelectFile.setText("Select");
         
+        
         JLabel labelFilenameCaption = new JLabel("Name");
-        labelFilename = new JLabel("PLACEHOLDER");
+        labelFilename = new JLabel("-");
         JLabel labelFilepathCaption = new JLabel("Path");
-        labelFilepath = new JLabel("PLACEHOLDER");
+        labelFilepath = new JLabel("-");
         JLabel labelFilesizeCaption = new JLabel("Size");
-        labelFilesize = new JLabel("PLACEHOLDER");
+        labelFilesize = new JLabel("-");
         
         this.add(labelPaneCaption);
         this.add(buttonSelectFile);
@@ -90,10 +148,31 @@ public class SelectFilePanel extends JPanel{
         layout.putConstraint(SpringLayout.WEST, labelFilesize, 0,SpringLayout.WEST, buttonSelectFile);
 	}
 	
+	/**
+	 * setFile
+	 * 
+	 * Sets file, updates UI and invokes onFileSelected callback.
+	 * @param file File selection
+	 */
+	private void setFile(File file) {
+		this.file = file;
+		labelFilename.setText(file.getName());
+		labelFilepath.setText(file.getAbsolutePath());
+		labelFilesize.setText(file.length() + " bytes");
+		eventListener.onFileSelected();
+	}
+	
+	/*
+	 * UI EVENT HANDLING ACTIONS
+	 */
+	
+	/**
+	 * selectFileAction
+	 * 
+	 * Shows file chooser dialog, validates selection, and updates UI accordingly.
+	 */
 	private AbstractAction selectFileAction = new AbstractAction() {
-		/**
-		 * 
-		 */
+		//default serialVersionUID
 		private static final long serialVersionUID = 1L;
 
 		@Override
@@ -102,15 +181,15 @@ public class SelectFilePanel extends JPanel{
 			fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
 			int result = fileChooser.showOpenDialog(SelectFilePanel.this);
 			if (result == JFileChooser.APPROVE_OPTION) {
-				setFile(fileChooser.getSelectedFile());
+				if (MimeTypeChecker.isTextFile(fileChooser.getSelectedFile())) {
+					setFile(fileChooser.getSelectedFile());
+				} else {
+					JOptionPane.showMessageDialog(SelectFilePanel.this,
+							"Please select a valid text file.",
+						    "Error.",
+						    JOptionPane.ERROR_MESSAGE);
+				}
 			}
 		}
 	};
-	
-	private void setFile(File file) {
-		this.file = file;
-		labelFilename.setText(file.getName());
-		labelFilepath.setText(file.getAbsolutePath());
-		labelFilesize.setText(file.length() + " bytes");
-	}
 }

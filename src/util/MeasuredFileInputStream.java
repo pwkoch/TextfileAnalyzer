@@ -6,11 +6,12 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 /**
+ * MeasuredFileInputStream
  * 
- * @author Patrick
+ * Updated FileInputStream class, extended to retrieve information about current status of file analysis
  * Idea from https://stackoverflow.com/questions/2399943/how-to-obtain-position-in-file-byte-position-from-java-scanner/2820497#2820497
+ * @author Patrick
  */
-
 public class MeasuredFileInputStream extends FileInputStream {
 
 	public MeasuredFileInputStream(File file) throws FileNotFoundException {
@@ -42,7 +43,7 @@ public class MeasuredFileInputStream extends FileInputStream {
 	/**
 	 * getFilePosition
 	 * 
-	 * @return number of bytes already read in the stream.
+	 * @return integer number of bytes already read in the stream.
 	 */
 	public int getFilePosition() {
 		return aiPos[0];
