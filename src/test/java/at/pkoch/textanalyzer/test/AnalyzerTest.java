@@ -1,4 +1,4 @@
-package at.pkoch.textanalyzer.test_;
+package at.pkoch.textanalyzer.test;
 
 import static org.junit.jupiter.api.Assertions.*;
 

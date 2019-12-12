@@ -83,7 +83,7 @@ public class AnalysisResultFrame extends JFrame {
 		
 	    this.addWindowListener(new java.awt.event.WindowAdapter() {
 	        @Override
-	        public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+	        public void windowClosing(WindowEvent windowEvent) {
 	        	if (swingWorker != null) {
 	        		swingWorker.cancel(true);
 	        	}
