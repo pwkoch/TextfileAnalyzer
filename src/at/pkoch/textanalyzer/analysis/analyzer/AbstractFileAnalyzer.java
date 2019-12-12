@@ -1,8 +1,8 @@
-package analysis.analyzer;
+package at.pkoch.textanalyzer.analysis.analyzer;
 
 import java.io.File;
 
-import analysis.AnalysisResultType;
+import at.pkoch.textanalyzer.analysis.AnalysisResultType;
 
 /**
  * AbstractFileAnalyzer
@@ -82,16 +82,14 @@ public abstract class AbstractFileAnalyzer {
 		if (!isEligible()) {
 			listener.onFileAnalysisFailed("File not eligible for analysis.");
 		} else {
-			worker = new Thread(new Runnable() {
-				public void run() {
-					Object analysisResult = analyzeFile();
-					if (analysisResult != null) {
-						listener.onFileAnalysisComplete(analysisResult, AbstractFileAnalyzer.this.getResultType());
-					} else {
-						listener.onFileAnalysisFailed("An error occurred during file analysis.");
-					}
-	            }
-	        });
+			worker = new Thread(() -> {
+				Object analysisResult = analyzeFile();
+				if (analysisResult != null) {
+					listener.onFileAnalysisComplete(analysisResult, AbstractFileAnalyzer.this.getResultType());
+				} else {
+					listener.onFileAnalysisFailed("An error occurred during file analysis.");
+				}
+            });
 			worker.start(); 
 		}
 	}

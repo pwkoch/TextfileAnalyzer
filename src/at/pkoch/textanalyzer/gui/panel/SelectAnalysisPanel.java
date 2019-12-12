@@ -1,4 +1,4 @@
-package gui.panel;
+package at.pkoch.textanalyzer.gui.panel;
 
 import java.awt.Component;
 import java.awt.event.ActionEvent;
@@ -10,8 +10,8 @@ import javax.swing.JLabel;
 import javax.swing.JProgressBar;
 import javax.swing.SpringLayout;
 
-import analysis.analyzer.AbstractFileAnalyzer;
-import analysis.analyzer.CountTokenOccurrenceAnalyzer;
+import at.pkoch.textanalyzer.analysis.analyzer.AbstractFileAnalyzer;
+import at.pkoch.textanalyzer.analysis.analyzer.CountTokenOccurrenceAnalyzer;
 
 /**
  * SelectAnalysisPanel

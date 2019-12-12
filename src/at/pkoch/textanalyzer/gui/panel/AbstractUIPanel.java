@@ -1,4 +1,4 @@
-package gui.panel;
+package at.pkoch.textanalyzer.gui.panel;
 
 import java.awt.Component;
 

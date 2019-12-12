@@ -1,4 +1,4 @@
-package util;
+package at.pkoch.textanalyzer.util;
 
 import java.io.File;
 import java.io.IOException;

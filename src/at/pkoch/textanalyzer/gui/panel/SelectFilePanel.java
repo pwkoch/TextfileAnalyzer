@@ -1,7 +1,9 @@
-package gui.panel;
+package at.pkoch.textanalyzer.gui.panel;
 
 import java.awt.event.ActionEvent;
 import java.io.File;
+import java.util.prefs.BackingStoreException;
+import java.util.prefs.Preferences;
 
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
@@ -10,7 +12,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.SpringLayout;
 
-import util.MimeTypeChecker;
+import at.pkoch.textanalyzer.util.MimeTypeChecker;
 
 /**
  * SelectFilePanel
@@ -159,7 +161,40 @@ public class SelectFilePanel extends AbstractUIPanel{
 		labelFilename.setText(file.getName());
 		labelFilepath.setText(file.getAbsolutePath());
 		labelFilesize.setText(file.length() + " bytes");
+		this.setLastOpenFilePath(file);
 		eventListener.onFileSelected();
+	}
+	
+	/**
+	 * setLastOpenFilePath
+	 * 
+	 * Stores the path of the last, successfully opened for future use.
+	 * @param file File selected in last interaction 
+	 */
+	private void setLastOpenFilePath(File chosenFile) {
+		Preferences prefs = Preferences.userRoot().node(this.getClass().getName());
+		prefs.put("PREFERENCE_KEY_LAST_OPEN_FOLDER", chosenFile.getParentFile().getAbsolutePath());
+		try {
+			prefs.flush();
+		} catch (BackingStoreException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * getLastOpenFilePath
+	 * 
+	 * Retrieves the path of the last, successfully opened file.
+	 * @return File path of last successfully opened file, if exists; null otherwise
+	 */
+	private File getLastOpenFilePath() {
+		Preferences prefs = Preferences.userRoot().node(this.getClass().getName());
+		String path = prefs.get("PREFERENCE_KEY_LAST_OPEN_FOLDER", null);
+		if (path != null) {
+			return new File(path);
+		} else {
+			return null;
+		}
 	}
 	
 	/*
@@ -178,7 +213,8 @@ public class SelectFilePanel extends AbstractUIPanel{
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			JFileChooser fileChooser = new JFileChooser();
-			fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
+			File lastOpenedFilePath = getLastOpenFilePath();
+			fileChooser.setCurrentDirectory(lastOpenedFilePath != null ? lastOpenedFilePath : new File(System.getProperty("user.home")));
 			int result = fileChooser.showOpenDialog(SelectFilePanel.this);
 			if (result == JFileChooser.APPROVE_OPTION) {
 				if (MimeTypeChecker.isTextFile(fileChooser.getSelectedFile())) {

@@ -1,4 +1,4 @@
-package gui.frame;
+package at.pkoch.textanalyzer.gui.frame;
 
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;

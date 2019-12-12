@@ -1,4 +1,4 @@
-package analysis;
+package at.pkoch.textanalyzer.analysis;
 
 /**
  * AnalysisResultType

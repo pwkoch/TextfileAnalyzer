@@ -1,11 +1,11 @@
-package analysis.analyzer;
+package at.pkoch.textanalyzer.analysis.analyzer;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
-import analysis.AnalysisResultType;
-import util.MeasuredFileInputStream;
+import at.pkoch.textanalyzer.analysis.AnalysisResultType;
+import at.pkoch.textanalyzer.util.MeasuredFileInputStream;
 
 /**
  * CountTokenOccurrenceAnalyzer

@@ -1,15 +1,16 @@
-package application;
+package at.pkoch.textanalyzer.application;
 
-import analysis.AnalysisResultType;
-import analysis.analyzer.AbstractFileAnalyzer;
-import analysis.analyzer.AbstractFileAnalyzer.IFileAnalysisListener;
+import java.awt.Cursor;
 
-import gui.frame.AnalysisResultFrame;
-import gui.frame.TextAnalyzerFrame;
-import gui.panel.SelectAnalysisPanel;
-import gui.panel.SelectAnalysisPanel.ISelectAnalysisPanelEventListener;
-import gui.panel.SelectFilePanel;
-import gui.panel.SelectFilePanel.ISelectFilePanelEventListener;
+import at.pkoch.textanalyzer.analysis.AnalysisResultType;
+import at.pkoch.textanalyzer.analysis.analyzer.AbstractFileAnalyzer;
+import at.pkoch.textanalyzer.analysis.analyzer.AbstractFileAnalyzer.IFileAnalysisListener;
+import at.pkoch.textanalyzer.gui.frame.AnalysisResultFrame;
+import at.pkoch.textanalyzer.gui.frame.TextAnalyzerFrame;
+import at.pkoch.textanalyzer.gui.panel.SelectAnalysisPanel;
+import at.pkoch.textanalyzer.gui.panel.SelectFilePanel;
+import at.pkoch.textanalyzer.gui.panel.SelectAnalysisPanel.ISelectAnalysisPanelEventListener;
+import at.pkoch.textanalyzer.gui.panel.SelectFilePanel.ISelectFilePanelEventListener;
 
 
 /**
@@ -36,6 +37,7 @@ public class Application implements ISelectFilePanelEventListener, ISelectAnalys
 	 * MEMBER VARIABLES
 	 */
 	
+	TextAnalyzerFrame frame;
 	SelectFilePanel selectFilePanel;
 	SelectAnalysisPanel selectAnalysisPanel;
 	
@@ -49,7 +51,7 @@ public class Application implements ISelectFilePanelEventListener, ISelectAnalys
 	 * Creates UI, registers event callbacks and shows interface.
 	 */
 	private Application() {
-		TextAnalyzerFrame frame = new TextAnalyzerFrame();
+		frame = new TextAnalyzerFrame();
         
 		selectFilePanel = new SelectFilePanel(this);
 		frame.add(selectFilePanel);
@@ -142,6 +144,9 @@ public class Application implements ISelectFilePanelEventListener, ISelectAnalys
 	public void onFileAnalysisComplete(Object result, AnalysisResultType resultType) {
 		selectFilePanel.setEnabled(true);
 		selectAnalysisPanel.onAnalysisStopped();
+		
+		frame.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 		AnalysisResultFrame.visualizeAnalysisResult(result, resultType);
+		frame.setCursor(Cursor.getDefaultCursor());
 	}
 }
